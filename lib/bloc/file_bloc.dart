@@ -1,44 +1,31 @@
-import 'dart:io';
-
 import 'package:blocexample/bloc/file_event.dart';
 import 'package:blocexample/bloc/file_state.dart';
 import 'package:blocexample/repository/file_rep.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class FileBloc extends Bloc<FileEvent ,FileState>{
-  final FileRepository repository;
+class DocumentBloc extends Bloc< DocumentEvent,DocumentState>{
+  final DocumentRepository repository;
 
-  FileBloc(this.repository): super(FileInit()){
-    on<FileUpload>(_onupload);
-    on<FileDownload>(_ondowmload);
-  }
-
-  Future<void> _onupload(FileUpload event,Emitter<FileState> emit) async{
+  DocumentBloc(this.repository): super(DocumentLoading()){
+    on<LoadDocument>((event, emit) async{
       try{
-        emit(FileLoading());
-
-        FilePickerResult? result =await FilePicker.platform.pickFiles();
-
-        if(result == null) return;
-
-        File file = File(result.files.single.path!);
-        await repository.uploadFile(file);
-
-        emit(FileSucess('File Uploaded Successfully'));
-      }catch (e){
-        emit(FileError(e.toString()));
+        final docs = await repository.fetchdocument();
+        emit(DocumentLoaded(docs));
+      }catch(e){
+        emit(DocumentError(e.toString()));
       }
-  }
+    });
 
-  Future<void> _ondowmload(FileDownload event,Emitter<FileState> emit) async{
-    try{
-      emit(FileLoading());
-
-        final path = await repository.dowmloadFile(event.url);
-        emit(FileSucess('File Downloaded at $path'));
-    }catch (e){
-      emit(FileError(e.toString()));
-    }
+    on<DownloadDocument>((event, emit) async{
+      try{
+        await repository.downloaddocument(event.doc, (received, total){
+          final progress = ((received/total) * 100).toInt();
+          emit(DocumentDownloading(event.doc.name, progress));
+        });
+        emit(DocumentDownloaded(event.doc.name));
+      }catch(e){
+        emit(DocumentError(e.toString()));
+      }
+    });
   }
 }

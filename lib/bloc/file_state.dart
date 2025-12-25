@@ -1,26 +1,26 @@
-import 'package:equatable/equatable.dart';
+import 'package:blocexample/model/file_models.dart';
 
-abstract class FileState extends Equatable{
-  @override
-  List<Object?> get props => [];
+abstract class DocumentState{}
+
+class DocumentLoading extends DocumentState{}
+
+class DocumentLoaded extends DocumentState{
+  final List<Document> doc;
+  DocumentLoaded(this.doc);
 }
 
-class FileInit extends FileState{}
-
-class FileLoading extends FileState{}
-
-class FileSucess extends FileState{
-  final String message;
-  FileSucess(this.message);
-
-  @override
-  List<Object?> get props => [message];
+class DocumentDownloading extends DocumentState{
+  final String name;
+  final int progresd;
+  DocumentDownloading( this.name, this.progresd);
 }
 
-class FileError extends FileState{
+class DocumentDownloaded extends DocumentState{
+  final String name;
+  DocumentDownloaded(this.name);
+}
+
+class DocumentError extends DocumentState{
   final String error;
-  FileError(this.error);
-
-  @override
-  List<Object?> get props => [error];
+  DocumentError(this.error);
 }

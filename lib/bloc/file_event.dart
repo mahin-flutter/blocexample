@@ -1,17 +1,10 @@
-import 'package:equatable/equatable.dart';
+import 'package:blocexample/model/file_models.dart';
 
-abstract class FileEvent extends Equatable {
-  @override
-  List<Object?> get props => [];
+abstract class DocumentEvent{}
+
+class LoadDocument extends DocumentEvent{}
+
+class DownloadDocument extends DocumentEvent{
+  final Document doc;
+  DownloadDocument(this.doc);
 }
-
-class FileUpload extends FileEvent {}
-
-class FileDownload extends FileEvent{
-  final String url;
-
-  FileDownload(this.url);
-
-  @override
-  List<Object?> get props => [url];
-  }
