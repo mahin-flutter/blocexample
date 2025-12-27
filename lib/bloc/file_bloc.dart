@@ -25,8 +25,6 @@ class DocumentBloc extends Bloc<DocumentEvent, DocumentState> {
     on<DownloadAll>(_onDownloadAll);
   }
 
-  /* ---------------- LOAD DOCUMENTS ---------------- */
-
   Future<void> _onLoad(
       LoadDocument event, Emitter<DocumentState> emit) async {
     try {
@@ -37,8 +35,6 @@ class DocumentBloc extends Bloc<DocumentEvent, DocumentState> {
       emit(DocumentError(e.toString()));
     }
   }
-
-  /* ---------------- START DOWNLOAD ---------------- */
 
   Future<void> _onDownload(
       DownloadDocument event, Emitter<DocumentState> emit) async {
