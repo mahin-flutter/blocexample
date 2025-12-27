@@ -23,3 +23,16 @@ class CancelDownload extends DocumentEvent{
 }
 
 class DownloadAll extends DocumentEvent{}
+
+class DownloadProgress extends DocumentEvent {
+  final String name;
+  final int received;
+  final int total;
+
+  DownloadProgress(this.name, this.received, this.total);
+}
+
+class DownloadFinished extends DocumentEvent {
+  final String name;
+  DownloadFinished(this.name);
+}
